@@ -1,0 +1,26 @@
+{
+  // Configuration de la BDD dans l'environnement de développement
+  "development": {
+    "username": "", // Votre nom d'utilisateur de BDD
+    "password": "", // Votre mot de passe de BDD
+    "database": "", // Le nom de la BDD
+    "host": "localhost", // L'adresse de la BDD
+    "dialect": "mysql" // Le type de BDD (mysql, mariaDB...)
+    // si utilisation de MAMP, mettre...
+    //"port": 8889
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
