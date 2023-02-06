@@ -11,14 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Project.belongsTo(models.Association, {
-        foreignKey: 'association_id',
-        as: 'association'
-      });
-      Project.belongsTo(models.Type, {
-        foreignKey: 'type_id',
-        as: 'type'
-      });
     }
   }
   Project.init({

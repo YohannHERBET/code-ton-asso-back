@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -11,8 +12,8 @@ router.get('/projects', (req, res) => {
   res.send('GET /projects'); // to adjust
 });
 
-router.get('/associations', (req, res) => {
-  res.send('GET /associations'); // to adjust
+router.get('/associations', async (req, res) => {
+  // get les associations en bdd
 });
 
 router.get('/developers', (req, res) => {

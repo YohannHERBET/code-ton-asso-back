@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'association_id',
         as: 'projects'
       });
+      Association.belongsToMany(models.Category, {
+        through: 'AssociationCategories'
+      });
+
     }
   }
   Association.init({
