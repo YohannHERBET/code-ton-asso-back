@@ -11,11 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Skill.belongsToMany(models.Developer, {
+        through: 'DeveloperSkills'
+      });
     }
   }
   Skill.init({
-    label: DataTypes.STRING,
-    value: DataTypes.STRING
+    label: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+    },
+    value: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Skill',

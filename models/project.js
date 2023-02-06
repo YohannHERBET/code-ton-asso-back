@@ -11,18 +11,61 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Project.belongsToMany(models.Developer, {
+        through: 'DeveloperProjects'
+      }),
+      Project.belongsToMany(models.Feature, {
+        through: 'ProjectFeatures'
+      }),
+      Project.belongsTo(models.Association, {
+        foreignKey: 'association_id',
+        as: 'association'
+      }),
+      Project.belongsTo(models.Type, {
+        foreignKey: 'type_id',
+        as: 'type'
+      })
     }
   }
   Project.init({
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    other_features: DataTypes.STRING,
-    release_date: DataTypes.DATE,
-    slug: DataTypes.STRING,
-    visible: DataTypes.BOOLEAN,
-    status: DataTypes.ENUM('NotStarted', 'InProgress', 'Finished'),
-    type_id: DataTypes.INTEGER,
-    association_id: DataTypes.INTEGER
+    title: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    other_features: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    release_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
+    visible: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    status: {
+      type: DataTypes.ENUM('NotStarted', 'InProgress', 'Finished'),
+      defaultValue: 'NotStarted',
+      allowNull: false
+    },
+    type_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    association_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Project',

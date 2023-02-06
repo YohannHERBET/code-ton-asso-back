@@ -11,11 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Feature.belongsToMany(models.Project, {
+        through: 'ProjectFeatures'
+      });
     }
   }
   Feature.init({
-    label: DataTypes.STRING,
-    value: DataTypes.STRING
+    label: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    value: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Feature',

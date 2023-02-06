@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/projects', (req, res) => {
-  res.send('GET /projects'); // to adjust
+  res.send('route to GET /projects'); // to adjust
 });
 
 router.get('/associations', async (req, res) => {

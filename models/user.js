@@ -11,15 +11,41 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Developer, {
+        foreignKey: 'developer_id',
+        as: 'developer'
+      });
+      User.belongsTo(models.Association, {
+        foreignKey: 'association_id',
+        as: 'association'
+      });
     }
   }
   User.init({
-    firstname: DataTypes.STRING,
-    lastname: DataTypes.STRING,
-    email: DataTypes.STRING,
-    description: DataTypes.STRING,
-    developer_id: DataTypes.INTEGER,
-    association_id: DataTypes.INTEGER
+    firstname: {
+      type: DataTypes.STRING(32),
+      allowNull: false
+    },
+    lastname: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    developer_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    association_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    }
   }, {
     sequelize,
     modelName: 'User',

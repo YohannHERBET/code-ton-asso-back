@@ -15,7 +15,6 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -37,9 +36,10 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+sequelize.sync({ force: true });
+  // sequelize.sync();
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
-
-sequelize.sync();

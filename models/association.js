@@ -4,6 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Association extends Model {
+    // comment here
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -22,13 +23,21 @@ module.exports = (sequelize, DataTypes) => {
       Association.belongsToMany(models.Category, {
         through: 'AssociationCategories'
       });
-
     }
   }
   Association.init({
-    rna: DataTypes.STRING,
-    association_name: DataTypes.STRING,
-    slug: DataTypes.STRING
+    rna: {
+      type: DataTypes.STRING(16),
+      allowNull: false,
+    },
+    association_name: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Association',

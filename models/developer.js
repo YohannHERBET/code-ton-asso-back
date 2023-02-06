@@ -11,13 +11,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Developer.hasOne(models.User, {
+        foreignKey: 'developer_id',
+        as: 'user'
+      });
+      Developer.belongsToMany(models.Skill, {
+        through: 'DeveloperSkills'
+      });
+      Developer.belongsToMany(models.Project, {
+        through: 'DeveloperProjects'
+      });
     }
   }
   Developer.init({
-    type: DataTypes.ENUM('Frontend', 'Backend', 'Fullstack'),
-    work_preferences: DataTypes.ENUM('Solo', 'Group', 'Both'),
-    level: DataTypes.ENUM('Junior', 'Intermediate', 'Senior'),
-    slug: DataTypes.STRING
+    type: {
+      type: DataTypes.ENUM('Frontend', 'Backend', 'Fullstack'),
+      allowNull: false,
+    },
+    work_preferences: {
+      type: DataTypes.ENUM('Solo', 'Group', 'Both'),
+      allowNull: false,
+  },
+    level: {
+      type: DataTypes.ENUM('Junior', 'Intermediate', 'Senior'),
+      allowNull: false,
+    },
+    slug: {
+      type: DataTypes.STRING(128),
+      allowNull: true,
+    }
   }, {
     sequelize,
     modelName: 'Developer',

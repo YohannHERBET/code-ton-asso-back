@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
+const db = require('../models');
+
 dotenv.config();
 
 // récupération du router custom
