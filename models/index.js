@@ -36,6 +36,7 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+// Force la synchronisation de la base de données avec les modèles
 sequelize.sync({ force: true });
   // sequelize.sync();
 

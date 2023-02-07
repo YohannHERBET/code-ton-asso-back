@@ -20,10 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     label: {
       type: DataTypes.STRING(32),
       allowNull: false,
+      defaultValue: 'skill label',
     },
     value: {
       type: DataTypes.STRING(32),
       allowNull: false,
+      defaultValue: 'skill value',
     },
   }, {
     sequelize,

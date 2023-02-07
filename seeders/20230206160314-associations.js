@@ -10,7 +10,6 @@ for (let index = 1; index <= 50; index++) {
     createdAt: new Date(),
     updatedAt: new Date()
   });
-
 }
 
 module.exports = {
