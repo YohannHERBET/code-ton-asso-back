@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-test}
+      MYSQL_USER: ${DB_USER:-test}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-test}
+  app:
+    container_name: app
+    build: .
+    ports:
+      - ${PORT:-3000}:3000
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    restart: always
+    environment:
+      PMA_HOST: ${DB_HOST:-db}
+      PMA_USER: ${DB_USER:-test}
+      PMA_PASSWORD: ${DB_PASSWORD:-test}
+      PMA_ARBITRARY: 1
+volumes:
+  mysql:

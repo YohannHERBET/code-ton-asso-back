@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CLEAR='\033[0m'
+
+# if param 1 is equal to "up"
+if [ "$1" = "up" ]; then
+  docker-compose up
+  exit 0
+fi
+
+
+# if param 1 is equal to "down"
+if [ "$1" = "down" ]; then
+  docker-compose down
+  exit 0
+fi
+
+# if param 1 is equal to "stop"
+if [ "$1" = "stop" ]; then
+  docker-compose stop
+  exit 0
+fi
+
+# If param 1 is equal to "npm"
+if [ "$1" = "seed" ]; then
+
+  echo -e "${YELLOW}Starting the database seeding${CLEAR}"
+  
+  # Take the rest of parameters and pass them to npm
+  shift
+  docker exec -it app npm run seed
+
+  echo -e "${GREEN}Done!${CLEAR}"
+  exit 0
+fi
+ 
+# if param 1 is equal to "migrate"
+if [ "$1" = "migrate" ]; then
+
+  echo -e "${YELLOW}Starting the database migration${CLEAR}"
+  
+  # Take the rest of parameters and pass them to npm
+  shift
+  docker exec -it app npm run migrate
+
+  echo -e "${GREEN}Done!${CLEAR}"
+  exit 0
+fi
+
+# if param 1 is equal to "migrate:undo"
+if [ "$1" = "migrate:undo" ]; then
+
+  echo -e "${YELLOW}Undoing database migration${CLEAR}"
+  
+  # Take the rest of parameters and pass them to npm
+  shift
+  docker exec -it app npm run migrate:undo
+
+  echo -e "${GREEN}Done!${CLEAR}"
+fi
+
+# else take the rest of parameters and pass them to npm
+shift
+docker exec -it app $@
+
+exit 0
