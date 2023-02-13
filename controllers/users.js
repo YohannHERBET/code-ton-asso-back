@@ -3,39 +3,55 @@ const { User } = db;
 
 const getUsers = async (req, res) => {
   const users = await User.findAll();
-  res.send(users);
+  if (!users) {
+    return res.status(404).send({ message: 'La DB a dû sauter ¯\_(ツ)_/¯' });
+  }
+  res.json(users);
 }
 
 const getUser = async (req, res) => {
-  const user = await User.findOne({
-    where: { id: req.params.id },
-  });
+  const user = await User.findOne({ where: { id: req.params.id }, });
+  if (!user) {
+    return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
+  }
   res.send(user);
 }
 
 const createUser = async (req, res) => {
-  console.log(req.body);
   try {
     const user = await User.create(req.body);
-    res.send(user);
+    res.status(201).json(user);
   } catch(error) {
-    console.log(error);
-    res.send('Error');
+    if (error.name.includes('Sequelize')) {
+      return res.status(400).send(error.errors.map((err) => err.message));
+    }
+    res.status(500).send({ message: 'Erreur interne' });
   }
 }
 
 const updateUser = async (req, res) => {
-  const user = await User.update(req.body, {
+  const user = await User.findOne({ where: { id: req.params.id } });
+  if (!user) {
+    return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
+  }
+  await User.update(req.body, {
     where: { id: req.params.id },
   });
-  res.send(user);
+  res.json(user);
 }
 
 const deleteUser = async (req, res) => {
-  const user = await User.destroy({
+  const user = await User.findOne({
     where: { id: req.params.id },
   });
-  res.send(user);
+  if (user) {
+    await User.destroy({
+      where: { id: req.params.id },
+    });
+    res.send({ message: 'User Deleted' });
+  } else {
+    res.status(404).send({ message: 'User Not Found' });
+  }
 }
 
 module.exports = {

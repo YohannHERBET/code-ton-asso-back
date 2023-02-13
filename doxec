@@ -8,20 +8,20 @@ CLEAR='\033[0m'
 
 # if param 1 is equal to "up"
 if [ "$1" = "up" ]; then
-  docker-compose up
+  docker compose up
   exit 0
 fi
 
 
 # if param 1 is equal to "down"
 if [ "$1" = "down" ]; then
-  docker-compose down
+  docker compose down
   exit 0
 fi
 
 # if param 1 is equal to "stop"
 if [ "$1" = "stop" ]; then
-  docker-compose stop
+  docker compose stop
   exit 0
 fi
 
@@ -63,8 +63,6 @@ if [ "$1" = "migrate:undo" ]; then
   echo -e "${GREEN}Done!${CLEAR}"
 fi
 
-# else take the rest of parameters and pass them to npm
-shift
 docker exec -it app $@
 
 exit 0
