@@ -36,11 +36,11 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-// Force la synchronisation de la base de données avec les modèles
-sequelize.sync({ force: true });
-  // sequelize.sync();
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+// Force la synchronisation de la base de données avec les modèles
+sequelize.sync({ force: false, alter: true });
+// sequelize.sync();
 
 module.exports = db;
