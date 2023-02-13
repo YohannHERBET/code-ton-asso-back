@@ -1,6 +1,4 @@
-const { faker } = require('@faker-js/faker/locale/fr');
 const types = require('../resources/types');
-
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

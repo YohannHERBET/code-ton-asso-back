@@ -1,4 +1,3 @@
-// import { faker } from '@faker-js/faker/locale/fr';
 const { faker } = require('@faker-js/faker/locale/fr');
 
 const developers = [];

@@ -1,29 +1,21 @@
-const { faker } = require('@faker-js/faker/locale/fr');
+const getRandomUniqueId = require('../utils/uniqueRandomIdGenerator');
+const getRandomNumber = require('../utils/randomNumberGenerator.js');
 
 const nbOfProjects = 10;
 const nbOfDevelopers = 50;
 const maxNbOfDevInProject = 4;
 const developerProjects = [];
 
-const getRandomUniqueDevId = (randomIdArray) => {
-  const randomId = faker.datatype.number({ min: 1, max: nbOfDevelopers });
-  if (randomIdArray.includes(randomId)) {
-    return getRandomUniqueDevId(randomIdArray);
-  }
-  randomIdArray.push(randomId);
-  return randomId;
-};
-
 for (let projectId = 1; projectId <= nbOfProjects; projectId++) {
   randomIdArray = [];
-  const devsInThisProject = faker.datatype.number({ min: 0, max: maxNbOfDevInProject });
+  const devsInThisProject = getRandomNumber(0, maxNbOfDevInProject);
   if (devsInThisProject === 0) {
     continue;
   }
   for (let nbOfDevInProject = 1; nbOfDevInProject <= devsInThisProject; nbOfDevInProject++) {
     developerProjects.push({
       ProjectId: projectId,
-      DeveloperId: getRandomUniqueDevId(randomIdArray),
+      DeveloperId: getRandomUniqueId(randomIdArray, nbOfDevelopers),
       createdAt: new Date(),
       updatedAt: new Date()
     });

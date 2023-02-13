@@ -1,4 +1,3 @@
-const { faker } = require('@faker-js/faker/locale/fr');
 const skills = require('../resources/skills.js');
 
 module.exports = {
