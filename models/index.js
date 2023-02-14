@@ -16,14 +16,6 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// const { DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD } = process.env;
-
-
-// const sequelize = new Sequelize(DB_DATABASE, DB_USERNAME, DB_PASSWORD, {
-//   dialect: 'mysql',
-//   host: DB_HOST
-// });
-
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -50,6 +42,5 @@ db.Sequelize = Sequelize;
 
 // Force la synchronisation de la base de données avec les modèles
 sequelize.sync({ force: false, alter: true });
-// sequelize.sync();
 
 module.exports = db;

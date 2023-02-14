@@ -10,7 +10,7 @@ const getUsers = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
-  const user = await User.findOne({ where: { id: req.params.id }, });
+  const user = await User.findOne({ where: { id: req.params.id } });
   if (!user) {
     return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
   }
@@ -34,11 +34,8 @@ const updateUser = async (req, res) => {
   if (!user) {
     return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
   }
-  const updatedUser = await User.update(req.body, {
-    where: { id: req.params.id },
-  });
-  res.json(updatedUser);
-
+  await User.update(req.body, { where: { id: req.params.id } });
+  res.json(user);
 }
 
 const deleteUser = async (req, res) => {

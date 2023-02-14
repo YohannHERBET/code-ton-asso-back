@@ -8,7 +8,7 @@ const getDevelopers = async (req, res) => {
     where : { developer_id: { [Op.ne]: null } },
     include: ['developer']
   });
-  res.send(developers);
+  res.json(developers);
 }
 
 const getLastDevelopers = async (req, res) => {
@@ -29,26 +29,26 @@ const getDeveloper = async (req, res) => {
     where: { developer_id: req.params.id },
     include: ['developer']
   });
-  res.send(developer);
+  res.json(developer);
 }
 
 const createDeveloper = async (req, res) => {
   const developer = await Developer.create(req.body);
-  res.send(developer);
+  res.json(developer);
 }
 
 const updateDeveloper = async (req, res) => {
   const developer = await Developer.update(req.body, {
     where: { id: req.params.id },
   });
-  res.send(developer);
+  res.json(developer);
 }
 
 const deleteDeveloper = async (req, res) => {
   const developer = await Developer.destroy({
     where: { id: req.params.id },
   });
-  res.send(developer);
+  res.json(developer);
 }
 
 module.exports = {
