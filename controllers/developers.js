@@ -1,14 +1,33 @@
+const { Op } = require("sequelize");
+
 const db = require('../models');
-const { Developer } = db;
+const { Developer, User } = db;
 
 const getDevelopers = async (req, res) => {
-  const developers = await Developer.findAll();
+  const developers = await User.findAll({
+    where : { developer_id: { [Op.ne]: null } },
+    include: ['developer']
+  });
   res.send(developers);
 }
 
+const getLastDevelopers = async (req, res) => {
+  const developers = await User.findAll({
+    limit: 3,
+    where : { developer_id: { [Op.ne]: null } },
+    order: [['createdAt', 'DESC']],
+    include: ['developer'],
+  });
+  if (!developers) {
+    return res.status(404).send({ message: 'Aucun utilisateur trouvé' });
+  }
+  res.json(developers);
+}
+
 const getDeveloper = async (req, res) => {
-  const developer = await Developer.findOne({
-    where: { id: req.params.id },
+  const developer = await User.findOne({
+    where: { developer_id: req.params.id },
+    include: ['developer']
   });
   res.send(developer);
 }
@@ -34,6 +53,7 @@ const deleteDeveloper = async (req, res) => {
 
 module.exports = {
   getDevelopers,
+  getLastDevelopers,
   getDeveloper,
   createDeveloper,
   updateDeveloper,

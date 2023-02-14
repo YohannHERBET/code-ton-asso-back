@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getDevelopers,
+  getLastDevelopers,  
   getDeveloper,
   createDeveloper,
   updateDeveloper,
@@ -10,6 +11,7 @@ const {
 } = require('../controllers/developers');
 
 router.get('/', getDevelopers);
+router.get('/latest', getLastDevelopers);
 router.get('/:id', getDeveloper);
 router.post('/', createDeveloper);
 router.put('/:id', updateDeveloper);

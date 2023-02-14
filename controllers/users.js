@@ -14,7 +14,7 @@ const getUser = async (req, res) => {
   if (!user) {
     return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
   }
-  res.send(user);
+  res.json(user);
 }
 
 const createUser = async (req, res) => {
@@ -34,24 +34,22 @@ const updateUser = async (req, res) => {
   if (!user) {
     return res.status(404).send({ message: 'L\'utilisateur n\'a pas été trouvé' });
   }
-  await User.update(req.body, {
+  const updatedUser = await User.update(req.body, {
     where: { id: req.params.id },
   });
-  res.json(user);
+  res.json(updatedUser);
+
 }
 
 const deleteUser = async (req, res) => {
-  const user = await User.findOne({
-    where: { id: req.params.id },
-  });
+  const user = await User.findOne({ where: { id: req.params.id } });
   if (user) {
     await User.destroy({
       where: { id: req.params.id },
     });
-    res.send({ message: 'User Deleted' });
-  } else {
-    res.status(404).send({ message: 'User Not Found' });
+    return res.send({ message: 'Utilisateur supprimé' });
   }
+  res.status(404).send({ message: 'Utilisateur non trouvé' });
 }
 
 module.exports = {

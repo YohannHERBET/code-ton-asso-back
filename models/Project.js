@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     release_date: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     slug: {
       type: DataTypes.STRING(128),
