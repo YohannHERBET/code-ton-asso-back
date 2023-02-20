@@ -1,9 +1,8 @@
-'use strict';
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Developer extends Model {
+  class Type extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,16 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Type.hasMany(models.Project, {
+        foreignKey: 'type_id',
+        as: 'projects'
+      });
     }
   }
-  Developer.init({
-    type: DataTypes.ENUM('Frontend', 'Backend', 'Fullstack'),
-    work_preferences: DataTypes.ENUM('Solo', 'Group', 'Both'),
-    level: DataTypes.ENUM('Junior', 'Intermediate', 'Senior'),
-    slug: DataTypes.STRING
+  Type.init({
+    label: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    value: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     sequelize,
-    modelName: 'Developer',
+    modelName: 'Type',
   });
-  return Developer;
+  return Type;
 };
