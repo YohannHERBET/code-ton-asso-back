@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const db = require('../models');
 const { Association, User, Developer } = db;
@@ -17,6 +18,11 @@ const login = async (req, res) => {
   // Check if password is correct
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return res.status(400).send('Les identifiants sont incorrects.');
+
+  // Create and assign a token
+  const userToken = { userId: user.id, email: user.email }
+  const token = jwt.sign(userToken, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+  res.header('auth-token', token).json({ token });
 }
 
 // Création d'un compte développeur

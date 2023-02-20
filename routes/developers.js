@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 
 const {
   getDevelopers,
@@ -10,11 +11,11 @@ const {
   deleteDeveloper
 } = require('../controllers/developers');
 
-router.get('/', getDevelopers);
-router.get('/latest', getLastDevelopers);
-router.get('/:id', getDeveloper);
-router.post('/', createDeveloper);
-router.put('/:id', updateDeveloper);
-router.delete('/:id', deleteDeveloper);
+router.get('/', auth, getDevelopers);
+router.get('/latest', auth, getLastDevelopers);
+router.get('/:id', auth, getDeveloper);
+router.post('/', auth, createDeveloper);
+router.put('/:id', auth, updateDeveloper);
+router.delete('/:id', auth, deleteDeveloper);
 
 module.exports = router;
