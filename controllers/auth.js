@@ -7,22 +7,27 @@ const { Association, User, Developer } = db;
 
 // Authentification
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Veuillez remplir tous les champs.' });
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Veuillez remplir tous les champs.' });
+    }
+    // Check if user exists
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
+
+    // Check if password is correct
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
+
+    // Create and assign a token
+    const userToken = { userId: user.id, email: user.email };
+    const token = jwt.sign(userToken, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+    res.status(200).header('auth-token', token).json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
-  // Check if user exists
-  const user = await User.findOne({ where: { email } });
-  if (!user) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
-
-  // Check if password is correct
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
-
-  // Create and assign a token
-  const userToken = { userId: user.id, email: user.email };
-  const token = jwt.sign(userToken, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-  res.header('auth-token', token).json({ token });
 };
 
 // Création d'un compte développeur
