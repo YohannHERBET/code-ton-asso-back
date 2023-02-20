@@ -9,8 +9,10 @@ const type_routes = require('../routes/types');
 const skill_routes = require('../routes/skills');
 const feature_routes = require('../routes/features');
 const category_routes = require('../routes/categories');
+const auth_routes = require('../routes/auth');
 
 router.use('/api/users',user_routes);
+router.use('/api/auth',auth_routes);
 router.use('/api/projects',project_routes);
 router.use('/api/developers',developer_routes);
 router.use('/api/associations',association_routes);

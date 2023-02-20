@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const auth = require('../middleware/auth');
+
 const {
   getAssociations,
   getLatestAssociations,
@@ -10,11 +12,11 @@ const {
   deleteAssociation
 } = require('../controllers/associations');
 
-router.get('/', getAssociations);
-router.get('/latest', getLatestAssociations);
-router.get('/:id', getAssociation);
-router.post('/', createAssociation);
-router.put('/:id', updateAssociation);
-router.delete('/:id', deleteAssociation);
+router.get('/', auth, getAssociations);
+router.get('/latest', auth, getLatestAssociations);
+router.get('/:id', auth, getAssociation);
+router.post('/', auth, createAssociation);
+router.put('/:id', auth, updateAssociation);
+router.delete('/:id', auth, deleteAssociation);
 
 module.exports = router;
