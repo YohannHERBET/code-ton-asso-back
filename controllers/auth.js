@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -7,28 +7,28 @@ const { Association, User, Developer } = db;
 
 // Authentification
 const login = async (req, res) => {
-  const { email, password,} = req.body;
-  if(!email || !password) {
-    return res.status(400).send('Veuillez remplir tous les champs.');
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Veuillez remplir tous les champs.' });
   }
   // Check if user exists
   const user = await User.findOne({ where: { email } });
-  if (!user) return res.status(400).send('Les identifiants sont incorrects.');
-  
+  if (!user) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
+
   // Check if password is correct
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).send('Les identifiants sont incorrects.');
+  if (!validPassword) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
 
   // Create and assign a token
-  const userToken = { userId: user.id, email: user.email }
+  const userToken = { userId: user.id, email: user.email };
   const token = jwt.sign(userToken, process.env.TOKEN_SECRET, { expiresIn: '1h' });
   res.header('auth-token', token).json({ token });
-}
+};
 
 // Création d'un compte développeur
 const createDeveloperAccount = async (req, res) => {
   const { email, password, firstname, lastname, description, type, work_preferences, level, slug } = req.body;
-  if(!email || !password || !firstname || !lastname || !description || !type || !work_preferences || !level || !slug) {
+  if (!email || !password || !firstname || !lastname || !description || !type || !work_preferences || !level || !slug) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
@@ -38,7 +38,7 @@ const createDeveloperAccount = async (req, res) => {
   // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  
+
   const developer = await Developer.create({
     type,
     work_preferences,
@@ -56,12 +56,12 @@ const createDeveloperAccount = async (req, res) => {
   });
 
   res.json(newUser);
-}
+};
 
 // Création d'un compte association
 const createAssociationAccount = async (req, res) => {
-  const { email, password, firstname, lastname, description, rna, association_name, slug} = req.body;
-  if(!email || !password || !firstname || !lastname || !description || !rna || !association_name || !slug) {
+  const { email, password, firstname, lastname, description, rna, association_name, slug } = req.body;
+  if (!email || !password || !firstname || !lastname || !description || !rna || !association_name || !slug) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
@@ -89,9 +89,7 @@ const createAssociationAccount = async (req, res) => {
     description,
     association_id: newAssociation.id,
   });
-
-}
-
+};
 
 module.exports = {
   login,
