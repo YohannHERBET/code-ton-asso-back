@@ -1,6 +1,4 @@
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Type extends Model {
     /**
@@ -12,22 +10,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Type.hasMany(models.Project, {
         foreignKey: 'type_id',
-        as: 'projects'
+        as: 'projects',
       });
     }
   }
-  Type.init({
-    label: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  Type.init(
+    {
+      label: {
+        type: DataTypes.STRING(32),
+        allowNull: false,
+      },
+      value: {
+        type: DataTypes.STRING(32),
+        allowNull: false,
+      },
     },
-    value: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Type',
-  });
+    {
+      sequelize,
+      modelName: 'Type',
+    }
+  );
   return Type;
 };
