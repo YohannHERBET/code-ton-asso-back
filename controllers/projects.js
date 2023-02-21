@@ -10,14 +10,12 @@ const getProjects = async (req, res) => {
 };
 
 const getProject = async (req, res) => {
-  console.log('req.params', req.params);
   const project = await Project.findOne({
     where: { slug: req.params.slug },
+    include: [{ all: true, nested: true }],
   });
   if (!project) {
-    return res
-      .status(404)
-      .send({ message: "La fonctionnalité n'a pas été trouvée" });
+    return res.status(404).send({ message: "Le projet n'a pas été trouvé" });
   }
   res.json(project);
 };
@@ -37,9 +35,7 @@ const createProject = async (req, res) => {
 const updateProject = async (req, res) => {
   const project = await Project.findOne({ where: { id: req.params.id } });
   if (!project) {
-    return res
-      .status(404)
-      .send({ message: "La fonctionnalité n'a pas été trouvée" });
+    return res.status(404).send({ message: "Le projet n'a pas été trouvé" });
   }
   await Project.update(req.body, { where: { id: req.params.id } });
   res.json(project);
