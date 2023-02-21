@@ -7,11 +7,11 @@ const {
   getSkill,
   createSkill,
   updateSkill,
-  deleteSkill
+  deleteSkill,
 } = require('../controllers/skills');
 
-router.get('/', auth, getSkills);
-router.get('/:id', auth, getSkill);
+router.get('/', getSkills);
+router.get('/:id', getSkill);
 router.post('/', auth, createSkill);
 router.put('/:id', auth, updateSkill);
 router.delete('/:id', auth, deleteSkill);

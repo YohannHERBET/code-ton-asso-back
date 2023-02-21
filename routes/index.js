@@ -11,14 +11,14 @@ const feature_routes = require('../routes/features');
 const category_routes = require('../routes/categories');
 const auth_routes = require('../routes/auth');
 
-router.use('/api/users',user_routes);
-router.use('/api/auth',auth_routes);
-router.use('/api/projects',project_routes);
-router.use('/api/developers',developer_routes);
-router.use('/api/associations',association_routes);
-router.use('/api/types',type_routes);
-router.use('/api/skills',skill_routes);
-router.use('/api/features',feature_routes);
-router.use('/api/categories',category_routes);
+router.use('/api/users', user_routes);
+router.use('/api/auth', auth_routes);
+router.use('/api/projects', project_routes);
+router.use('/api/developers', developer_routes);
+router.use('/api/associations', association_routes);
+router.use('/api/types', type_routes);
+router.use('/api/skills', skill_routes);
+router.use('/api/features', feature_routes);
+router.use('/api/categories', category_routes);
 
 module.exports = router;

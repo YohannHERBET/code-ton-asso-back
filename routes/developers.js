@@ -4,16 +4,16 @@ const auth = require('../middleware/auth');
 
 const {
   getDevelopers,
-  getLastDevelopers,  
+  getLastDevelopers,
   getDeveloper,
   createDeveloper,
   updateDeveloper,
-  deleteDeveloper
+  deleteDeveloper,
 } = require('../controllers/developers');
 
-router.get('/', auth, getDevelopers);
-router.get('/latest', auth, getLastDevelopers);
-router.get('/:id', auth, getDeveloper);
+router.get('/', getDevelopers);
+router.get('/latest', getLastDevelopers);
+router.get('/:id', getDeveloper);
 router.post('/', auth, createDeveloper);
 router.put('/:id', auth, updateDeveloper);
 router.delete('/:id', auth, deleteDeveloper);

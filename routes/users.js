@@ -7,11 +7,11 @@ const {
   getUser,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
 } = require('../controllers/users');
 
-router.get('/', auth, getUsers);
-router.get('/:id', auth, getUser);
+router.get('/', getUsers);
+router.get('/:id', getUser);
 router.post('/', auth, createUser);
 router.put('/:id', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
