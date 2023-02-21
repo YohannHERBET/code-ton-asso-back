@@ -7,11 +7,11 @@ const {
   getType,
   createType,
   updateType,
-  deleteType
+  deleteType,
 } = require('../controllers/types');
 
-router.get('/', auth, getTypes);
-router.get('/:id', auth, getType);
+router.get('/', getTypes);
+router.get('/:id', getType);
 router.post('/', auth, createType);
 router.put('/:id', auth, updateType);
 router.delete('/:id', auth, deleteType);

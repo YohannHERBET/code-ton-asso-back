@@ -7,11 +7,11 @@ const {
   getCategory,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 } = require('../controllers/categories');
 
-router.get('/', auth, getCategories);
-router.get('/:id', auth, getCategory);
+router.get('/', getCategories);
+router.get('/:id', getCategory);
 router.post('/', auth, createCategory);
 router.put('/:id', auth, updateCategory);
 router.delete('/:id', auth, deleteCategory);

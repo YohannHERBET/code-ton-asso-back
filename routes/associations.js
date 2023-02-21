@@ -7,15 +7,13 @@ const {
   getAssociations,
   getLatestAssociations,
   getAssociation,
-  createAssociation,
   updateAssociation,
-  deleteAssociation
+  deleteAssociation,
 } = require('../controllers/associations');
 
-router.get('/', auth, getAssociations);
-router.get('/latest', auth, getLatestAssociations);
-router.get('/:id', auth, getAssociation);
-router.post('/', auth, createAssociation);
+router.get('/', getAssociations);
+router.get('/latest', getLatestAssociations);
+router.get('/:id', getAssociation);
 router.put('/:id', auth, updateAssociation);
 router.delete('/:id', auth, deleteAssociation);
 
