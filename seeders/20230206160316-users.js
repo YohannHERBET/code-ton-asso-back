@@ -7,7 +7,6 @@ for (let index = 1; index <= 50; index++) {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    // password: faker.internet.password(),
     password: faker.internet.password(),
     description: faker.company.bs(),
     developer_id: index,
