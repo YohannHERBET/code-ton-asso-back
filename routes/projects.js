@@ -11,7 +11,7 @@ const {
 } = require('../controllers/projects');
 
 router.get('/', getProjects);
-router.get('/:id', getProject);
+router.get('/:slug', getProject);
 router.post('/', auth, createProject);
 router.put('/:id', auth, updateProject);
 router.delete('/:id', auth, deleteProject);
