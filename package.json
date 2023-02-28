@@ -9,6 +9,7 @@
     "jsonwebtoken": "^9.0.0",
     "mariadb": "^3.1.0",
     "mysql2": "^3.1.0",
+    "sanitize-html": "^2.10.0",
     "sequelize": "^6.28.0"
   },
   "scripts": {

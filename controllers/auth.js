@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sanitizeHtml = require('sanitize-html');
 
 const db = require('../models');
 const { Association, User, Developer } = db;
@@ -9,22 +10,39 @@ const { Association, User, Developer } = db;
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Veuillez remplir tous les champs.' });
+    const sanitizedEmail = sanitizeHtml(email);
+
+    if (!sanitizedEmail || !password) {
+      return res
+        .status(400)
+        .json({ error: 'Veuillez remplir tous les champs.' });
     }
 
     // Check if user exists
-    const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
+    const user = await User.findOne({ where: { email: sanitizedEmail } });
+    if (!user)
+      return res
+        .status(400)
+        .json({ error: 'Les identifiants sont incorrects.' });
 
     // Check if password is correct
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(400).json({ error: 'Les identifiants sont incorrects.' });
+    if (!validPassword)
+      return res
+        .status(400)
+        .json({ error: 'Les identifiants sont incorrects.' });
 
     // Create and assign a token
-    const userToken = { userId: user.id, email: user.email, developerId: user.developer_id, associationId: user.association_id };
+    const userToken = {
+      userId: user.id,
+      email: sanitizedEmail,
+      developerId: user.developer_id,
+      associationId: user.association_id,
+    };
 
-    const token = jwt.sign(userToken, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(userToken, process.env.TOKEN_SECRET, {
+      expiresIn: '1h',
+    });
     res.status(200).header('auth-token', token).json({ token });
   } catch (error) {
     console.log(error);
@@ -34,13 +52,43 @@ const login = async (req, res) => {
 
 // Création d'un compte développeur
 const createDeveloperAccount = async (req, res) => {
-  const { email, password, firstname, lastname, description, type, work_preferences, level, slug } = req.body;
-  if (!email || !password || !firstname || !lastname || !description || !type || !work_preferences || !level || !slug) {
+  const {
+    email,
+    password,
+    firstname,
+    lastname,
+    description,
+    type,
+    work_preferences,
+    level,
+    slug,
+  } = req.body;
+
+  const sanitizedEmail = sanitizeHtml(email);
+  const sanitizedFirstname = sanitizeHtml(firstname);
+  const sanitizedLastname = sanitizeHtml(lastname);
+  const sanitizedDescription = sanitizeHtml(description);
+  const sanitizedSlug = sanitizeHtml(slug);
+
+  if (
+    !sanitizedEmail ||
+    !password ||
+    !sanitizedFirstname ||
+    !sanitizedLastname ||
+    !sanitizedDescription ||
+    !type ||
+    !work_preferences ||
+    !level ||
+    !sanitizedSlug
+  ) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
-  const user = await User.findOne({ where: { email } });
-  if (user) return res.status(400).send('Cet utilisateur existe déjà. Veuillez vous connecter.');
+  const user = await User.findOne({ where: { email: sanitizedEmail } });
+  if (user)
+    return res
+      .status(400)
+      .send('Cet utilisateur existe déjà. Veuillez vous connecter.');
 
   // Hash password
   const salt = await bcrypt.genSalt(10);
@@ -50,50 +98,83 @@ const createDeveloperAccount = async (req, res) => {
     type,
     work_preferences,
     level,
-    slug,
+    sanitizedSlug,
   });
 
   const newUser = await User.create({
-    email,
+    email: sanitizedEmail,
     password: hashedPassword,
-    firstname,
-    lastname,
-    description,
+    firstname: sanitizedFirstname,
+    lastname: sanitizedLastname,
+    description: sanitizedDescription,
     developer_id: developer.id,
   });
+  console.log('new User', newUser);
 
   res.status(201).json(newUser);
 };
 
 // Création d'un compte association
 const createAssociationAccount = async (req, res) => {
-  const { email, password, firstname, lastname, description, rna, association_name, slug } = req.body;
-  if (!email || !password || !firstname || !lastname || !description || !rna || !association_name || !slug) {
+  const {
+    email,
+    password,
+    firstname,
+    lastname,
+    description,
+    rna,
+    association_name,
+    slug,
+  } = req.body;
+  const sanitizedEmail = sanitizeHtml(email);
+  const sanitizedFirstname = sanitizeHtml(firstname);
+  const sanitizedLastname = sanitizeHtml(lastname);
+  const sanitizedDescription = sanitizeHtml(description);
+  const sanitizedRna = sanitizeHtml(rna);
+  const sanitizedAssociationName = sanitizeHtml(association_name);
+  const sanitizedSlug = sanitizeHtml(slug);
+
+  if (
+    !sanitizedEmail ||
+    !password ||
+    !sanitizedFirstname ||
+    !sanitizedLastname ||
+    !sanitizedDescription ||
+    !sanitizedRna ||
+    !sanitizedAssociationName ||
+    !sanitizedSlug
+  ) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
-  const user = await User.findOne({ where: { email } });
-  const association = await Association.findOne({ where: { rna } });
+  const user = await User.findOne({ where: { email: sanitizedEmail } });
+  const association = await Association.findOne({
+    where: { rna: sanitizedRna },
+  });
 
-  if (user) return res.status(400).send('Cet utilisateur existe déjà. Veuillez vous connecter.');
-  if (association) return res.status(400).send('Cette association existe déjà.');
+  if (user)
+    return res
+      .status(400)
+      .send('Cet utilisateur existe déjà. Veuillez vous connecter.');
+  if (association)
+    return res.status(400).send('Cette association existe déjà.');
 
   // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const newAssociation = await Association.create({
-    rna,
-    association_name,
-    slug,
+    rna: sanitizedRna,
+    association_name: sanitizedAssociationName,
+    slug: sanitizedSlug,
   });
 
   const newUser = await User.create({
-    email,
+    email: sanitizedEmail,
     password: hashedPassword,
-    firstname,
-    lastname,
-    description,
+    firstname: sanitizedFirstname,
+    lastname: sanitizedLastname,
+    description: sanitizedDescription,
     association_id: newAssociation.id,
   });
 
