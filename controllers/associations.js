@@ -28,9 +28,7 @@ const getAssociation = async (req, res) => {
     include: [{ all: true, nested: true }],
   });
   if (!association) {
-    return res
-      .status(404)
-      .send({ message: "L'association n'a pas été trouvée" });
+    return res.status(404).send({ message: "L'association n'a pas été trouvée" });
   }
   res.json(association);
 };

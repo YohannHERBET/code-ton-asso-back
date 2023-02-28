@@ -1,5 +1,5 @@
 const db = require('../models');
-const { Project } = db;
+const { Project, DeveloperProjects } = db;
 
 const getProjects = async (req, res) => {
   const projects = await Project.findAll();
@@ -43,7 +43,7 @@ const updateProject = async (req, res) => {
 
 const deleteProject = async (req, res) => {
   const project = await Project.findOne({ where: { id: req.params.id } });
-  if (user) {
+  if (project) {
     await Project.destroy({
       where: { id: req.params.id },
     });
@@ -52,10 +52,42 @@ const deleteProject = async (req, res) => {
   res.status(404).send({ message: 'Projet non trouvé' });
 };
 
+const joinProject = async (req, res) => {
+  try {
+    const { projectId, developerId } = req.body;
+    const project = await DeveloperProjects.create({ ProjectId: projectId, DeveloperId: developerId });
+    res.status(201).json(project);
+  } catch (error) {
+    if (error.name.includes('Sequelize')) {
+      return res.status(400).json({ message: 'bad request' });
+    }
+    res.status(500).json({ message: 'Erreur interne' });
+  }
+};
+
+const quitProject = async (req, res) => {
+  try {
+    const { projectId, developerId } = req.body;
+    if (!projectId && !developerId) {
+      return res.status(400).json({ message: 'bad request' });
+    }
+    console.log('gg');
+    await DeveloperProjects.destroy({ where: { ProjectId: projectId, DeveloperId: developerId } });
+    res.status(201).json({ message: 'project quit' });
+  } catch (error) {
+    if (error.name.includes('Sequelize')) {
+      return res.status(400).json({ message: 'bad request' });
+    }
+    res.status(500).json({ message: 'Erreur interne' });
+  }
+};
+
 module.exports = {
   getProjects,
   getProject,
   createProject,
   updateProject,
   deleteProject,
+  joinProject,
+  quitProject,
 };
