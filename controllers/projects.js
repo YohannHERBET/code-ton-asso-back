@@ -37,7 +37,7 @@ const updateProject = async (req, res) => {
   if (!project) {
     return res.status(404).send({ message: "Le projet n'a pas été trouvé" });
   }
-  await Project.update(req.body, { where: { id: req.params.id } });
+  await project.update(req.body);
   res.json(project);
 };
 
@@ -71,7 +71,6 @@ const quitProject = async (req, res) => {
     if (!projectId && !developerId) {
       return res.status(400).json({ message: 'bad request' });
     }
-    console.log('gg');
     await DeveloperProjects.destroy({ where: { ProjectId: projectId, DeveloperId: developerId } });
     res.status(201).json({ message: 'project quit' });
   } catch (error) {
