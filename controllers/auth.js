@@ -19,7 +19,10 @@ const login = async (req, res) => {
     }
 
     // Check if user exists
-    const user = await User.findOne({ where: { email: sanitizedEmail } });
+    const user = await User.findOne({
+      where: { email: sanitizedEmail },
+      include: [{ all: true, nested: true }],
+    });
     if (!user)
       return res
         .status(400)
@@ -38,6 +41,7 @@ const login = async (req, res) => {
       email: sanitizedEmail,
       developerId: user.developer_id,
       associationId: user.association_id,
+      slug: user?.developer?.slug || user?.association?.slug,
     };
 
     const token = jwt.sign(userToken, process.env.TOKEN_SECRET, {
@@ -111,7 +115,6 @@ const createDeveloperAccount = async (req, res) => {
     description: sanitizedDescription,
     developer_id: developer.id,
   });
-  console.log('new User', newUser);
 
   for (const skill of skills) {
     const skillInstance = await Skill.findByPk(skill);
