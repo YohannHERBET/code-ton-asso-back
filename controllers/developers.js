@@ -6,7 +6,7 @@ const { Developer, User } = db;
 const getDevelopers = async (req, res) => {
   const developers = await User.findAll({
     where: { developer_id: { [Op.ne]: null } },
-    include: ['developer'],
+    include: [{ all: true, nested: true }],
   });
   res.json(developers);
 };

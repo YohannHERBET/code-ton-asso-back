@@ -1,5 +1,6 @@
 const db = require('../models');
 const { Project, Feature } = db;
+const sanitizeHtml = require('sanitize-html');
 
 const getProjects = async (req, res) => {
   const projects = await Project.findAll({
@@ -26,15 +27,19 @@ const createProject = async (req, res) => {
   try {
     const { title, description, other_features, slug, type_id, association_id, release_date, features } = req.body;
     const userId = req.user.userId;
+    const sanitizedTitle = sanitizeHtml(title);
+    const sanitizedDescription = sanitizeHtml(description);
+    const sanitizedOtherFeatures = sanitizeHtml(other_features);
+    const sanitizedReleaseDate = sanitizeHtml(release_date);
 
     const project = await Project.create({
-      title,
-      description,
-      other_features,
+      title: sanitizedTitle,
+      description: sanitizedDescription,
+      other_features: sanitizedOtherFeatures,
       slug,
       type_id,
       association_id,
-      release_date,
+      release_date: sanitizedReleaseDate,
       userId,
     });
 

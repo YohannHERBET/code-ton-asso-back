@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const sanitizeHtml = require('sanitize-html');
 
 const db = require('../models');
-const { Association, User, Developer } = db;
+const { Association, User, Developer, Category, Skill } = db;
 
 // Authentification
 const login = async (req, res) => {
@@ -61,6 +61,7 @@ const createDeveloperAccount = async (req, res) => {
     type,
     work_preferences,
     level,
+    skills,
     slug,
   } = req.body;
 
@@ -79,6 +80,7 @@ const createDeveloperAccount = async (req, res) => {
     !type ||
     !work_preferences ||
     !level ||
+    !skills ||
     !sanitizedSlug
   ) {
     return res.status(400).send('Veuillez remplir tous les champs.');
@@ -98,7 +100,7 @@ const createDeveloperAccount = async (req, res) => {
     type,
     work_preferences,
     level,
-    sanitizedSlug,
+    slug: sanitizedSlug,
   });
 
   const newUser = await User.create({
@@ -110,6 +112,13 @@ const createDeveloperAccount = async (req, res) => {
     developer_id: developer.id,
   });
   console.log('new User', newUser);
+
+  for (const skill of skills) {
+    const skillInstance = await Skill.findByPk(skill);
+    if (skillInstance) {
+      await developer.addSkill(skillInstance);
+    }
+  }
 
   res.status(201).json(newUser);
 };
@@ -125,7 +134,9 @@ const createAssociationAccount = async (req, res) => {
     rna,
     association_name,
     slug,
+    categories,
   } = req.body;
+
   const sanitizedEmail = sanitizeHtml(email);
   const sanitizedFirstname = sanitizeHtml(firstname);
   const sanitizedLastname = sanitizeHtml(lastname);
@@ -141,6 +152,7 @@ const createAssociationAccount = async (req, res) => {
     !sanitizedLastname ||
     !sanitizedDescription ||
     !sanitizedRna ||
+    !categories ||
     !sanitizedAssociationName ||
     !sanitizedSlug
   ) {
@@ -177,6 +189,13 @@ const createAssociationAccount = async (req, res) => {
     description: sanitizedDescription,
     association_id: newAssociation.id,
   });
+
+  for (const category of categories) {
+    const categoryInstance = await Category.findByPk(category);
+    if (categoryInstance) {
+      await newAssociation.addCategory(categoryInstance);
+    }
+  }
 
   res.status(201).json(newUser);
 };
