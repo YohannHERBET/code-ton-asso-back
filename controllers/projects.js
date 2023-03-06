@@ -1,8 +1,10 @@
 const db = require('../models');
-const { Project, DeveloperProjects } = db;
+const { Project, Feature } = db;
 
 const getProjects = async (req, res) => {
-  const projects = await Project.findAll();
+  const projects = await Project.findAll({
+    include: Feature,
+  });
   if (!projects) {
     return res.status(404).send({ message: 'Aucun projet trouvé' });
   }
@@ -12,7 +14,7 @@ const getProjects = async (req, res) => {
 const getProject = async (req, res) => {
   const project = await Project.findOne({
     where: { slug: req.params.slug },
-    include: [{ all: true, nested: true }],
+    include: ['Features'],
   });
   if (!project) {
     return res.status(404).send({ message: "Le projet n'a pas été trouvé" });
@@ -22,13 +24,38 @@ const getProject = async (req, res) => {
 
 const createProject = async (req, res) => {
   try {
-    const project = await Project.create(req.body);
-    res.status(201).json(user);
+    const { title, description, other_features, slug, type_id, association_id, release_date, features } = req.body;
+    const userId = req.user.userId;
+
+    const project = await Project.create({
+      title,
+      description,
+      other_features,
+      slug,
+      type_id,
+      association_id,
+      release_date,
+      userId,
+    });
+
+    for (const feature of features) {
+      const featureInstance = await Feature.findByPk(feature);
+      if (featureInstance) {
+        await project.addFeature(featureInstance);
+      }
+    }
+    
+    const result = await Project.findOne({
+      where: { id: project.id },
+      include: Feature,
+    });
+
+    res.status(201).json({ project: result });
   } catch (error) {
     if (error.name.includes('Sequelize')) {
-      return res.status(400).send(error.errors.map((err) => err.message));
+      return res.status(400).json({ error });
     }
-    res.status(500).send({ message: 'Erreur interne' });
+    res.status(500).send({ message: 'Une erreur est survenue lors de la création du projet.' });
   }
 };
 
