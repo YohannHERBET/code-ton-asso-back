@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sanitizeHtml = require('sanitize-html');
 
 const db = require('../models');
 const { Association, User, Developer } = db;
@@ -9,17 +10,16 @@ const { Association, User, Developer } = db;
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
+    const sanitizedEmail = sanitizeHtml(email);
+
+    if (!sanitizedEmail || !password) {
       return res
         .status(400)
         .json({ error: 'Veuillez remplir tous les champs.' });
     }
 
     // Check if user exists
-    const user = await User.findOne({
-      where: { email },
-      include: [{ all: true, nested: true }],
-    });
+    const user = await User.findOne({ where: { email: sanitizedEmail } });
     if (!user)
       return res
         .status(400)
@@ -35,10 +35,9 @@ const login = async (req, res) => {
     // Create and assign a token
     const userToken = {
       userId: user.id,
-      email: user.email,
+      email: sanitizedEmail,
       developerId: user.developer_id,
       associationId: user.association_id,
-      slug: user?.association?.slug || user?.developer?.slug,
     };
 
     const token = jwt.sign(userToken, process.env.TOKEN_SECRET, {
@@ -64,21 +63,28 @@ const createDeveloperAccount = async (req, res) => {
     level,
     slug,
   } = req.body;
+
+  const sanitizedEmail = sanitizeHtml(email);
+  const sanitizedFirstname = sanitizeHtml(firstname);
+  const sanitizedLastname = sanitizeHtml(lastname);
+  const sanitizedDescription = sanitizeHtml(description);
+  const sanitizedSlug = sanitizeHtml(slug);
+
   if (
-    !email ||
+    !sanitizedEmail ||
     !password ||
-    !firstname ||
-    !lastname ||
-    !description ||
+    !sanitizedFirstname ||
+    !sanitizedLastname ||
+    !sanitizedDescription ||
     !type ||
     !work_preferences ||
     !level ||
-    !slug
+    !sanitizedSlug
   ) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email: sanitizedEmail } });
   if (user)
     return res
       .status(400)
@@ -92,17 +98,18 @@ const createDeveloperAccount = async (req, res) => {
     type,
     work_preferences,
     level,
-    slug,
+    sanitizedSlug,
   });
 
   const newUser = await User.create({
-    email,
+    email: sanitizedEmail,
     password: hashedPassword,
-    firstname,
-    lastname,
-    description,
+    firstname: sanitizedFirstname,
+    lastname: sanitizedLastname,
+    description: sanitizedDescription,
     developer_id: developer.id,
   });
+  console.log('new User', newUser);
 
   res.status(201).json(newUser);
 };
@@ -119,21 +126,31 @@ const createAssociationAccount = async (req, res) => {
     association_name,
     slug,
   } = req.body;
+  const sanitizedEmail = sanitizeHtml(email);
+  const sanitizedFirstname = sanitizeHtml(firstname);
+  const sanitizedLastname = sanitizeHtml(lastname);
+  const sanitizedDescription = sanitizeHtml(description);
+  const sanitizedRna = sanitizeHtml(rna);
+  const sanitizedAssociationName = sanitizeHtml(association_name);
+  const sanitizedSlug = sanitizeHtml(slug);
+
   if (
-    !email ||
+    !sanitizedEmail ||
     !password ||
-    !firstname ||
-    !lastname ||
-    !description ||
-    !rna ||
-    !association_name ||
-    !slug
+    !sanitizedFirstname ||
+    !sanitizedLastname ||
+    !sanitizedDescription ||
+    !sanitizedRna ||
+    !sanitizedAssociationName ||
+    !sanitizedSlug
   ) {
     return res.status(400).send('Veuillez remplir tous les champs.');
   }
 
-  const user = await User.findOne({ where: { email } });
-  const association = await Association.findOne({ where: { rna } });
+  const user = await User.findOne({ where: { email: sanitizedEmail } });
+  const association = await Association.findOne({
+    where: { rna: sanitizedRna },
+  });
 
   if (user)
     return res
@@ -147,17 +164,17 @@ const createAssociationAccount = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const newAssociation = await Association.create({
-    rna,
-    association_name,
-    slug,
+    rna: sanitizedRna,
+    association_name: sanitizedAssociationName,
+    slug: sanitizedSlug,
   });
 
   const newUser = await User.create({
-    email,
+    email: sanitizedEmail,
     password: hashedPassword,
-    firstname,
-    lastname,
-    description,
+    firstname: sanitizedFirstname,
+    lastname: sanitizedLastname,
+    description: sanitizedDescription,
     association_id: newAssociation.id,
   });
 
