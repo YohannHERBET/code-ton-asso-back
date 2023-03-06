@@ -19,11 +19,16 @@ const login = async (req, res) => {
     }
 
     // Check if user exists
-    const user = await User.findOne({ where: { email: sanitizedEmail } });
+    const user = await User.findOne({
+      where: { email: sanitizedEmail },
+      include: [{ all: true, nested: true }],
+    });
     if (!user)
       return res
         .status(400)
         .json({ error: 'Les identifiants sont incorrects.' });
+
+    console.log('user', user);
 
     // Check if password is correct
     const validPassword = await bcrypt.compare(password, user.password);
@@ -38,6 +43,7 @@ const login = async (req, res) => {
       email: sanitizedEmail,
       developerId: user.developer_id,
       associationId: user.association_id,
+      slug: user?.developer?.slug || user?.association?.slug,
     };
 
     const token = jwt.sign(userToken, process.env.TOKEN_SECRET, {
