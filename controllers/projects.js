@@ -15,7 +15,7 @@ const getProjects = async (req, res) => {
 const getProject = async (req, res) => {
   const project = await Project.findOne({
     where: { slug: req.params.slug },
-    include: ['Features'],
+    include: [{ all: true, nested: true }],
   });
   if (!project) {
     return res.status(404).send({ message: "Le projet n'a pas été trouvé" });
@@ -49,7 +49,7 @@ const createProject = async (req, res) => {
         await project.addFeature(featureInstance);
       }
     }
-    
+
     const result = await Project.findOne({
       where: { id: project.id },
       include: Feature,
