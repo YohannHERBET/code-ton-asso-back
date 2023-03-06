@@ -28,8 +28,6 @@ const login = async (req, res) => {
         .status(400)
         .json({ error: 'Les identifiants sont incorrects.' });
 
-    console.log('user', user);
-
     // Check if password is correct
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword)
@@ -117,7 +115,6 @@ const createDeveloperAccount = async (req, res) => {
     description: sanitizedDescription,
     developer_id: developer.id,
   });
-  console.log('new User', newUser);
 
   for (const skill of skills) {
     const skillInstance = await Skill.findByPk(skill);
