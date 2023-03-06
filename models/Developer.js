@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+const DeveloperProjects = require('./DeveloperProjects');
 module.exports = (sequelize, DataTypes) => {
   class Developer extends Model {
     /**
@@ -13,36 +12,39 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Developer.hasOne(models.User, {
         foreignKey: 'developer_id',
-        as: 'user'
+        as: 'user',
       });
       Developer.belongsToMany(models.Skill, {
-        through: 'DeveloperSkills'
+        through: 'DeveloperSkills',
       });
       Developer.belongsToMany(models.Project, {
-        through: 'DeveloperProjects'
+        through: models.DeveloperProjects,
       });
     }
   }
-  Developer.init({
-    type: {
-      type: DataTypes.ENUM('Frontend', 'Backend', 'Fullstack'),
-      allowNull: false,
+  Developer.init(
+    {
+      type: {
+        type: DataTypes.ENUM('Frontend', 'Backend', 'Fullstack'),
+        allowNull: false,
+      },
+      work_preferences: {
+        type: DataTypes.ENUM('Solo', 'Group', 'Both'),
+        allowNull: false,
+      },
+      level: {
+        type: DataTypes.ENUM('Junior', 'Intermediate', 'Senior'),
+        allowNull: false,
+      },
+      slug: {
+        type: DataTypes.STRING(128),
+        allowNull: true,
+      },
     },
-    work_preferences: {
-      type: DataTypes.ENUM('Solo', 'Group', 'Both'),
-      allowNull: false,
-  },
-    level: {
-      type: DataTypes.ENUM('Junior', 'Intermediate', 'Senior'),
-      allowNull: false,
-    },
-    slug: {
-      type: DataTypes.STRING(128),
-      allowNull: true,
+    {
+      sequelize,
+      modelName: 'Developer',
     }
-  }, {
-    sequelize,
-    modelName: 'Developer',
-  });
+  );
   return Developer;
 };
