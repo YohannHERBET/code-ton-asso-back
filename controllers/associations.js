@@ -33,34 +33,6 @@ const getAssociation = async (req, res) => {
   res.json(association);
 };
 
-// const createAssociation = async (req, res) => {
-//   try {
-//     const association = await Association.create(req.body);
-
-//     const categories = req.body.categories;
-//     console.log(' CaTeGoRieSSSSSS console.log', categories);
-//     for (const category of categories) {
-//       const categoryInstance = await Category.findByPk(category);
-//       if (categoryInstance) {
-//         await association.addCategory(categoryInstance);
-//       }
-//     }
-
-//     const result = await association.findOne({
-//       where: { id: association.id },
-//       include: Category,
-//     });
-
-//     res.status(201).json({ association: result });
-
-//   } catch (error) {
-//     if (error.name.includes('Sequelize')) {
-//       return res.status(400).send(error.errors.map((err) => err.message));
-//     }
-//     res.status(500).send({ message: 'Erreur interne' });
-//   }
-// };
-
 const updateAssociation = async (req, res) => {
   const association = await Association.findOne({
     where: { id: req.params.id },
