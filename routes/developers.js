@@ -13,7 +13,7 @@ const {
 
 router.get('/', getDevelopers);
 router.get('/latest', getLastDevelopers);
-router.get('/:id', getDeveloper);
+router.get('/:slug', getDeveloper);
 router.post('/', auth, createDeveloper);
 router.put('/:id', auth, updateDeveloper);
 router.delete('/:id', auth, deleteDeveloper);
