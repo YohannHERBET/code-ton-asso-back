@@ -13,7 +13,7 @@ const {
 
 router.get('/', getAssociations);
 router.get('/latest', getLatestAssociations);
-router.get('/:id', getAssociation);
+router.get('/:slug', getAssociation);
 router.put('/:id', auth, updateAssociation);
 router.delete('/:id', auth, deleteAssociation);
 

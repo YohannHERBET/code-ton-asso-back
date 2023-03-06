@@ -1,19 +1,19 @@
 const types = [
   {
-    label: "mobileApp",
-    value: "Application Mobile",
+    value: 'mobileApp',
+    label: 'Application Mobile',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    label: "rework",
-    value: "Refonte",
+    value: 'rework',
+    label: 'Refonte',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    label: "webSiteCreation",
-    value: "Création de site web",
+    value: 'webSiteCreation',
+    label: 'Création de site web',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
