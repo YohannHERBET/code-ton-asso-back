@@ -33,18 +33,6 @@ const getAssociation = async (req, res) => {
   res.json(association);
 };
 
-const createAssociation = async (req, res) => {
-  try {
-    const association = await Association.create(req.body);
-    res.json(association);
-  } catch (error) {
-    if (error.name.includes('Sequelize')) {
-      return res.status(400).send(error.errors.map((err) => err.message));
-    }
-    res.status(500).send({ message: 'Erreur interne' });
-  }
-};
-
 const updateAssociation = async (req, res) => {
   const association = await Association.findOne({
     where: { id: req.params.id },
@@ -71,7 +59,6 @@ module.exports = {
   getAssociations,
   getLatestAssociations,
   getAssociation,
-  createAssociation,
   updateAssociation,
   deleteAssociation,
 };
