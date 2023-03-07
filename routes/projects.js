@@ -10,9 +10,11 @@ const {
   deleteProject,
   joinProject,
   quitProject,
+  getLatestProjects,
 } = require('../controllers/projects');
 
 router.get('/', getProjects);
+router.get('/latest', getLatestProjects);
 router.post('/join', auth, joinProject);
 router.delete('/quit', auth, quitProject);
 router.get('/:slug', getProject);

@@ -23,9 +23,27 @@ const getProject = async (req, res) => {
   res.json(project);
 };
 
+const getLatestProjects = async (req, res) => {
+  const projects = await Project.findAll({
+    limit: 3,
+    order: [['createdAt', 'DESC']],
+  });
+  if (!projects) return res.status(404).send('Aucun projet trouvé.');
+  res.json(projects);
+};
+
 const createProject = async (req, res) => {
   try {
-    const { title, description, other_features, slug, type_id, association_id, release_date, features } = req.body;
+    const {
+      title,
+      description,
+      other_features,
+      slug,
+      type_id,
+      association_id,
+      release_date,
+      features,
+    } = req.body;
     const userId = req.user.userId;
     const sanitizedTitle = sanitizeHtml(title);
     const sanitizedDescription = sanitizeHtml(description);
@@ -60,7 +78,9 @@ const createProject = async (req, res) => {
     if (error.name.includes('Sequelize')) {
       return res.status(400).json({ error });
     }
-    res.status(500).send({ message: 'Une erreur est survenue lors de la création du projet.' });
+    res.status(500).send({
+      message: 'Une erreur est survenue lors de la création du projet.',
+    });
   }
 };
 
@@ -87,7 +107,10 @@ const deleteProject = async (req, res) => {
 const joinProject = async (req, res) => {
   try {
     const { projectId, developerId } = req.body;
-    const project = await DeveloperProjects.create({ ProjectId: projectId, DeveloperId: developerId });
+    const project = await DeveloperProjects.create({
+      ProjectId: projectId,
+      DeveloperId: developerId,
+    });
     res.status(201).json(project);
   } catch (error) {
     if (error.name.includes('Sequelize')) {
@@ -103,7 +126,9 @@ const quitProject = async (req, res) => {
     if (!projectId && !developerId) {
       return res.status(400).json({ message: 'bad request' });
     }
-    await DeveloperProjects.destroy({ where: { ProjectId: projectId, DeveloperId: developerId } });
+    await DeveloperProjects.destroy({
+      where: { ProjectId: projectId, DeveloperId: developerId },
+    });
     res.status(201).json({ message: 'project quit' });
   } catch (error) {
     if (error.name.includes('Sequelize')) {
@@ -116,6 +141,7 @@ const quitProject = async (req, res) => {
 module.exports = {
   getProjects,
   getProject,
+  getLatestProjects,
   createProject,
   updateProject,
   deleteProject,
