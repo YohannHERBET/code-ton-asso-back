@@ -49,7 +49,6 @@ const login = async (req, res) => {
     });
     res.status(200).header('auth-token', token).json({ token });
   } catch (error) {
-    console.log(error);
     res.status(500).json(error);
   }
 };
@@ -199,7 +198,6 @@ const createAssociationAccount = async (req, res) => {
       await newAssociation.addCategory(categoryInstance);
     }
   }
-
   res.status(201).json(newUser);
 };
 

@@ -13,6 +13,7 @@
     "sequelize": "^6.28.0"
   },
   "scripts": {
+    "test": "jest",
     "make-model": "npx sequelize-cli model:generate --name user --attributes firstName:string, lastName:string",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo",
@@ -25,8 +26,10 @@
   "description": "projet code ton asso le back",
   "main": "index.js",
   "devDependencies": {
+    "jest": "^29.4.3",
     "nodemon": "^2.0.20",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "supertest": "^6.3.3"
   },
   "repository": {
     "type": "git",
