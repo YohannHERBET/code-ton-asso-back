@@ -1,5 +1,5 @@
 const db = require('../models');
-const { Project, Feature } = db;
+const { Project, Feature, DeveloperProjects } = db;
 const sanitizeHtml = require('sanitize-html');
 
 const getProjects = async (req, res) => {
@@ -87,6 +87,7 @@ const deleteProject = async (req, res) => {
 const joinProject = async (req, res) => {
   try {
     const { projectId, developerId } = req.body;
+    console.log(projectId, developerId);
     const project = await DeveloperProjects.create({ ProjectId: projectId, DeveloperId: developerId });
     res.status(201).json(project);
   } catch (error) {
