@@ -8,7 +8,7 @@ describe('associations routes test', () => {
     await db.sequelize.sync({ force: true });
   });
 
-  const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMywiZW1haWwiOiJ6b3phd3ViQG1haWxpbmF0b3IuY29tIiwiZGV2ZWxvcGVySWQiOm51bGwsImFzc29jaWF0aW9uSWQiOjUyLCJpYXQiOjE2NzgxNzk3OTcsImV4cCI6MTY3ODE4MzM5N30.4uvUwQkdUpOnNs24Wd6kh5b-tg0g9KZ9r3JDnfpaUbA';
+  let userToken2 = '';
 
   it('should return 201 on association creation', async () => {
     const response = await request(app).post('/api/auth/create-asso').send({
@@ -23,6 +23,16 @@ describe('associations routes test', () => {
       categories: ['1', '2', '3'],
     });
     expect(response.statusCode).toEqual(201);
+  });
+
+  it('connexion should return a token', async () => {
+    const response = await request(app).post('/api/auth/login').send({
+      email: 'albert@gmail.com',
+      password: '123',
+    });
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toHaveProperty('token');
+    userToken2 = response.body.token;
   });
 
   it('should return 200 on /api/associations', async () => {
@@ -44,7 +54,7 @@ describe('associations routes test', () => {
   it('should return 200 on association deletion', async () => {
     const response = await request(app)
     .delete('/api/associations/1')
-    .set('Authorization', `Bearer ${userToken}`);
+    .set('Authorization', `Bearer ${userToken2}`);
     expect(response.statusCode).toEqual(200);
   });
 
