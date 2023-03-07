@@ -28,23 +28,9 @@ const getAssociation = async (req, res) => {
     include: [{ all: true, nested: true }],
   });
   if (!association) {
-    return res
-      .status(404)
-      .send({ message: "L'association n'a pas été trouvée" });
+    return res.status(404).send({ message: "L'association n'a pas été trouvée" });
   }
   res.json(association);
-};
-
-const createAssociation = async (req, res) => {
-  try {
-    const association = await Association.create(req.body);
-    res.json(association);
-  } catch (error) {
-    if (error.name.includes('Sequelize')) {
-      return res.status(400).send(error.errors.map((err) => err.message));
-    }
-    res.status(500).send({ message: 'Erreur interne' });
-  }
 };
 
 const updateAssociation = async (req, res) => {
@@ -73,7 +59,6 @@ module.exports = {
   getAssociations,
   getLatestAssociations,
   getAssociation,
-  createAssociation,
   updateAssociation,
   deleteAssociation,
 };
