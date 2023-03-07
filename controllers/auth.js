@@ -199,7 +199,6 @@ const createAssociationAccount = async (req, res) => {
       await newAssociation.addCategory(categoryInstance);
     }
   }
-
   res.status(201).json(newUser);
 };
 
